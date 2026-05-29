@@ -7,12 +7,21 @@ import { getSocietyFund, getExpenseHistory } from '@/services/societyApi';
 import { formatCurrency, formatDate } from '@/utils/normalizers';
 import { Card } from '@/components/ui/Card';
 
+interface Expense {
+  id: string;
+  remark: string;
+  amount: number;
+  date: string;
+  mode: number;
+  imageUrl?: string;
+}
+
 export default function SocietyFundPage() {
   const router = useRouter();
   const { activeProfile } = useAuth();
   
   const [fund, setFund] = useState<any>(null);
-  const [historyItems, setHistoryItems] = useState<any[]>([]);
+  const [historyItems, setHistoryItems] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
   const [page, setPage] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
@@ -105,7 +114,7 @@ export default function SocietyFundPage() {
         ) : historyItems.length > 0 ? (
           <div className="space-y-3">
             <Card className="p-0 overflow-hidden border-border bg-white shadow-sm">
-              {historyItems.map((item, i) => (
+              {historyItems.map((item: Expense, i: number) => (
                 <div key={item.id} className={`flex items-center gap-4 p-5 ${i < historyItems.length - 1 ? 'border-b border-divider' : ''}`}>
                   <div className="w-11 h-11 bg-warning/5 rounded-xl flex items-center justify-center shrink-0">
                     <span className="text-xl">

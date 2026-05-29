@@ -7,14 +7,21 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { getSociety } from '@/services/societyApi';
 
+interface Society {
+  id: string;
+  name: string;
+  city: string;
+  plots: number;
+}
+
 export default function SocietyPage() {
   const router = useRouter();
   const { user, updateActiveProfile } = useAuth();
   
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState<any[]>([]);
+  const [results, setResults] = useState<Society[]>([]);
   const [searching, setSearching] = useState(false);
-  const [selected, setSelected] = useState<any>(null);
+  const [selected, setSelected] = useState<Society | null>(null);
 
   const myProfiles = user?.ownerProfiles || [];
 
@@ -113,7 +120,7 @@ export default function SocietyPage() {
 
           {results.length > 0 && !selected && (
             <div className="bg-white border border-border rounded-2xl overflow-hidden shadow-xl animate-in fade-in slide-in-from-top-4 duration-300">
-              {results.map((s, i) => (
+              {results.map((s: Society, i: number) => (
                 <button
                   key={i}
                   onClick={() => { setSelected(s); setQuery(s.name); setResults([]); }}

@@ -8,16 +8,36 @@ import { formatCurrency, normalizePlot } from '@/utils/normalizers';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 
+interface MaintenanceRow {
+  id: string;
+  monthYear: string;
+  amount: number;
+  lateCharge: number;
+  gst: number;
+}
+
+interface Plot {
+  id: string;
+  unitId: string | number;
+  ownerId: string | number;
+  plotNo: string;
+  type: string;
+  area: string;
+  societyId: string | number;
+  societyName: string;
+  pendingDue: number;
+}
+
 export default function MaintenancePage() {
   const router = useRouter();
   const { activeProfile } = useAuth();
   
   const [activePlotIdx, setActivePlotIdx] = useState(0);
-  const [rows, setRows] = useState<any[]>([]);
+  const [rows, setRows] = useState<MaintenanceRow[]>([]);
   const [loading, setLoading] = useState(false);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
 
-  const plots = useMemo(() => {
+  const plots = useMemo<Plot[]>(() => {
     return (activeProfile?.unitOwner || []).map((p: any, i: number) => normalizePlot(p, i));
   }, [activeProfile]);
 
@@ -29,7 +49,7 @@ export default function MaintenancePage() {
         setLoading(true);
         const data = await getMaintenanceDue(activePlot.societyId, activePlot.ownerId, activePlot.unitId);
         const dataArray = Array.isArray(data) ? data : [data];
-        const normalized = dataArray.map((row: any, idx: number) => {
+        const normalized: MaintenanceRow[] = dataArray.map((row: any, idx: number) => {
           const actualId = row.ledgerId ?? row.id ?? idx;
           return {
             id: String(actualId),
@@ -69,7 +89,7 @@ export default function MaintenancePage() {
 
       {/* Plot Switcher */}
       <div className="flex gap-4 px-6 overflow-x-auto pb-6 scrollbar-hide">
-        {plots.map((plot, i) => (
+        {plots.map((plot: Plot, i: number) => (
           <button
             key={i}
             onClick={() => setActivePlotIdx(i)}
@@ -113,7 +133,7 @@ export default function MaintenancePage() {
             {[1, 2].map(i => <div key={i} className="h-24 bg-surface-alt rounded-2xl" />)}
           </div>
         ) : rows.length > 0 ? (
-          rows.map((row) => (
+          rows.map((row: MaintenanceRow) => (
             <div
               key={row.id}
               onClick={() => toggleRow(row.id)}

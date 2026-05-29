@@ -8,10 +8,24 @@ import { HomeTopBar, HomeHero } from '@/components/home/HomeHeader';
 import { DashboardStats } from '@/components/home/DashboardStats';
 import { SocietyFundCard } from '@/components/home/SocietyFundCard';
 
+interface DashboardData {
+  user: { name: string };
+  society: { id: string | number; name: string };
+  plots: any[];
+  societyFund: any;
+  announcements: any[];
+  recentPayments: any[];
+}
+
+interface QuickAction {
+  label: string;
+  icon: string;
+}
+
 export default function HomePage() {
   const router = useRouter();
   const { activeProfile, user } = useAuth();
-  const [dashboard, setDashboard] = useState<any>(null);
+  const [dashboard, setDashboard] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -65,7 +79,7 @@ export default function HomePage() {
             { label: 'Dues', icon: '📝' },
             { label: 'Rules', icon: '📜' },
             { label: 'Staff', icon: '👮' },
-          ].map((action, i) => (
+          ].map((action: QuickAction, i: number) => (
             <button key={i} className="flex flex-col items-center gap-2 group">
               <div className="w-14 h-14 bg-white rounded-2xl border border-border flex items-center justify-center shadow-sm group-active:scale-90 transition-transform">
                 <span className="text-xl">{action.icon}</span>

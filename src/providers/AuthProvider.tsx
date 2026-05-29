@@ -18,7 +18,11 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 declare global {
   interface Window {
     HomeOrbitNative?: {
-      initialData: any;
+      initialData: {
+        session?: unknown;
+        user?: unknown;
+        config?: unknown;
+      };
       isNative: boolean;
       platform: string;
     };
@@ -34,7 +38,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const initAuth = async () => {
       try {
         // 1. Check for native data injection
-        const nativeData = typeof window !== 'undefined' ? window.HomeOrbitNative?.initialData : null;
+        const nativeData = (typeof window !== 'undefined' ? window.HomeOrbitNative?.initialData : null) as any;
         
         if (nativeData?.session) {
           const sessionUser = {
