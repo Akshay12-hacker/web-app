@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { NativeProvider } from "@/providers/NativeProvider";
+import { AuthProvider } from "@/providers/AuthProvider";
 
 export const metadata: Metadata = {
-  title: "HomeOrbit Hybrid",
-  description: "Modern hybrid living platform",
+  title: "HomeOrbit",
+  description: "Your Society Management App",
 };
 
 export default function RootLayout({
@@ -13,13 +13,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className="h-full antialiased">
-      <body className="min-h-full flex flex-col bg-white">
-        <NativeProvider>
-          <main className="flex-1 flex flex-col">
+    <html lang="en">
+      <body className="antialiased bg-background-custom min-h-screen">
+        <AuthProvider>
+          <main className="max-w-md mx-auto min-h-screen bg-surface shadow-xl relative overflow-hidden">
             {children}
           </main>
-        </NativeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
